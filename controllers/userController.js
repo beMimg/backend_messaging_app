@@ -89,6 +89,39 @@ exports.post_user = [
   },
 ];
 
-exports.put_user_bio = async (req, res, next) => {
-  return res.send("s");
-};
+exports.put_user_bio = [
+  body("bio")
+    .isLength({ max: 65 })
+    .withMessage("Bio must have maximum of 65 characters.")
+    .isLength({ min: 1 })
+    .withMessage("Bio must have at least one character."),
+
+  async (req, res, next) => {
+    try {
+      const existsUser = await User.findById(req.params.user_id);
+
+      if (!existsUser) {
+        return res.status(404).json({ errors: "User not found" });
+      }
+
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors });
+      }
+
+      await User.findByIdAndUpdate(
+        req.params.user_id,
+        { bio: req.body.bio },
+        {}
+      );
+
+      return res.status(200).json({
+        message: `User ${req.params.user_id} bio was updated to ${req.body.bio} `,
+      });
+    } catch (err) {
+      res.status(500).json({ error: "Internal Server Error" });
+      return next(err);
+    }
+  },
+];
