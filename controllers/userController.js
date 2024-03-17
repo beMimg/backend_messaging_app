@@ -88,3 +88,7 @@ exports.post_user = [
     }
   },
 ];
+
+exports.put_user_bio = async (req, res, next) => {
+  return res.send("s");
+};
