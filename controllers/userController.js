@@ -125,3 +125,39 @@ exports.put_user_bio = [
     }
   },
 ];
+
+exports.post_follow = async (req, res, next) => {
+  // find the user that follows (req.user_id) and populate following
+  // following push followed_user_id
+  try {
+    const user = await User.findById(req.user.user._id, "following");
+
+    const followedUser = await User.findById(
+      req.params.followed_user_id,
+      "username"
+    );
+
+    if (!followedUser) {
+      return res.status(404).json({ errors: "Followed user not found." });
+    }
+
+    const alreadyFollowing = user.following.includes(
+      req.params.followed_user_id
+    );
+
+    if (alreadyFollowing) {
+      return res.status(409).json({ errors: "User already followed." });
+    }
+
+    user.following.push(req.params.followed_user_id);
+
+    await user.save();
+
+    return res.status(200).json({
+      message: `You are now following ${followedUser.username}`,
+      following: user.following,
+    });
+  } catch (err) {
+    return next(err);
+  }
+};

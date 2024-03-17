@@ -14,5 +14,11 @@ router.put(
   isOwnerOfAccount,
   userController.put_user_bio
 );
+router.post(
+  "/:user_id/follow/:followed_user_id",
+  isAuthenticated,
+  isOwnerOfAccount,
+  userController.post_follow
+);
 
 module.exports = router;
