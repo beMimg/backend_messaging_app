@@ -5,6 +5,7 @@ const {
   isAuthenticated,
   isOwnerOfAccount,
 } = require("../middleware/authMiddleware");
+const conversationRouter = require("./conversation");
 
 router.get("/", isAuthenticated, userController.get_users);
 
@@ -31,4 +32,7 @@ router.delete(
   isOwnerOfAccount,
   userController.delete_follow
 );
+
+router.use("/:user_id/conversation", conversationRouter);
+
 module.exports = router;

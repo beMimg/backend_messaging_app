@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const conversationController = require("../controllers/conversationController");
 const {
   isAuthenticated,
@@ -7,7 +7,7 @@ const {
 } = require("../middleware/authMiddleware");
 
 router.post(
-  "/:user_id",
+  "/",
   isAuthenticated,
   isOwnerOfAccount,
   conversationController.post_conversation
