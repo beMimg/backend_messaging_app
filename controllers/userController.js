@@ -42,7 +42,10 @@ exports.post_user = [
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const usernameLowerCase = await req.body.username.toLowerCase();
-
+    // The variable usernameLowerCase is created to prevent users from creating accounts with the same username
+    // despite different cases. This ensures uniqueness and helps prevent user confusion.
+    // It stores the lowercase version of the username, which is used for comparison during account creation
+    // and validation processes to enforce case-insensitive uniqueness.
     const user = new User({
       username: req.body.username,
       usernameLowerCase: usernameLowerCase,

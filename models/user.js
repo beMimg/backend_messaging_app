@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const { DateTime } = require("luxon");
 
+// The variable usernameLowerCase is created to prevent users from creating accounts with the same username
+// despite different cases. This ensures uniqueness and helps prevent user confusion.
+// It stores the lowercase version of the username, which is used for comparison during account creation
+// and validation processes to enforce case-insensitive uniqueness.
 const UserSchema = new Schema({
   username: { type: String, required: true },
   usernameLowerCase: { type: String, required: true },
