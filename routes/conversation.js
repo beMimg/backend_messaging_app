@@ -5,6 +5,7 @@ const {
   isAuthenticated,
   isOwnerOfAccount,
 } = require("../middleware/authMiddleware");
+const messageRouter = require("./message");
 
 router.post(
   "/",
@@ -12,5 +13,7 @@ router.post(
   isOwnerOfAccount,
   conversationController.post_conversation
 );
+
+router.use("/:conversation_id/message", messageRouter);
 
 module.exports = router;

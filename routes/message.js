@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const messageController = require("../controllers/messageController");
 const {
   isAuthenticated,
@@ -7,8 +7,10 @@ const {
 } = require("../middleware/authMiddleware");
 
 router.post(
-  "/:user_id",
+  "/",
   isAuthenticated,
   isOwnerOfAccount,
   messageController.post_message
 );
+
+module.exports = router;
