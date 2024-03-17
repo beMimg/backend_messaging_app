@@ -16,6 +16,11 @@ const UserSchema = new Schema({
   creation: { type: Date, required: true },
   bio: { type: String },
   profile_pic: { type: Buffer, contentType: String },
+  following: {
+    type: Array,
+    contentType: Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 UserSchema.virtual("utc_creation").get(function () {
