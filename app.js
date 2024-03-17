@@ -10,6 +10,7 @@ const mongoose = require("mongoose");
 var apiRouter = require("./routes/api");
 const userRouter = require("./routes/user");
 const loginRouter = require("./routes/login");
+const conversationRouter = require("./routes/conversation");
 
 var app = express();
 
@@ -37,6 +38,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api", apiRouter);
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
+app.use("/api/conversation", conversationRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
