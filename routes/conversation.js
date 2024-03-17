@@ -14,6 +14,11 @@ router.post(
   conversationController.post_conversation
 );
 
-router.use("/:conversation_id/message", messageRouter);
+router.use(
+  "/:conversation_id/message",
+  isAuthenticated,
+  isOwnerOfAccount,
+  messageRouter
+);
 
 module.exports = router;
