@@ -3,6 +3,19 @@ const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 
+exports.get_users = async (req, res, next) => {
+  try {
+    const users = await User.find({}, "username");
+
+    if (users.length === 0) {
+      return res.status(200).json({ message: "There are no users yet." });
+    }
+    return res.status(200).json({ users: users });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 exports.post_user = [
   body("username")
     .trim()
