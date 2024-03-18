@@ -3,7 +3,7 @@ const Message = require("../models/message");
 
 exports.post_message = async (req, res, next) => {
   try {
-    // verifies if the user is in this conversation.
+    // finds the conversation
     const conversation = await Conversation.findById(
       req.params.conversation_id
     );
@@ -14,24 +14,28 @@ exports.post_message = async (req, res, next) => {
         .json({ errors: "This conversation doesn't exists." });
     }
 
+    // verifies if the user is in this conversation
     const isUserInConversation = conversation.participants.includes(
       req.user.user._id
     );
 
+    // return error if the user is not in the conversation
     if (!isUserInConversation) {
       return res
         .status(401)
         .json({ errors: "Your are not in this conversation" });
     }
 
-    // No message return
+    // if the req.body.content is empty, meaning no message sent, return error
     if (!req.body.content) {
       return res
         .status(409)
         .json({ errors: "You can't send an empty message." });
     }
-    // Filtering through the conversation.participants array,
-    // we get the ID of the user that doesn't much the user that sends the menssage.
+
+    // Filter through the conversation.participants array,
+    // we get the ID of the user that doesn't match the user that sends the menssage.
+    // This way we get the ID of the participant
     const recipient = conversation.participants.filter(
       (participant) => participant !== req.user.user._id
     );
