@@ -98,7 +98,7 @@ exports.put_user_bio = [
 
   async (req, res, next) => {
     try {
-      const existsUser = await User.findById(req.params.user_id);
+      const existsUser = await User.findById(req.user.user._id);
 
       if (!existsUser) {
         return res.status(404).json({ errors: "User not found" });
@@ -111,13 +111,13 @@ exports.put_user_bio = [
       }
 
       await User.findByIdAndUpdate(
-        req.params.user_id,
+        req.user.user._id,
         { bio: req.body.bio },
         {}
       );
 
       return res.status(200).json({
-        message: `User ${req.params.user_id} bio was updated to ${req.body.bio} `,
+        message: `User ${req.user.user._id} bio was updated to ${req.body.bio} `,
       });
     } catch (err) {
       res.status(500).json({ error: "Internal Server Error" });
