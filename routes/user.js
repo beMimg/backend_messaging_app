@@ -1,10 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
-const {
-  isAuthenticated,
-  isOwnerOfAccount,
-} = require("../middleware/authMiddleware");
+const { isAuthenticated } = require("../middleware/authMiddleware");
 const conversationRouter = require("./conversation");
 
 router.get("/", isAuthenticated, userController.get_users);
@@ -21,9 +18,8 @@ router.post(
 );
 
 router.delete(
-  "/:user_id/follow/:followed_user_id",
+  "/follow/:followed_user_id",
   isAuthenticated,
-  isOwnerOfAccount,
   userController.delete_follow
 );
 
