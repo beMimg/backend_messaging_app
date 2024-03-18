@@ -130,6 +130,10 @@ exports.post_follow = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.user._id, "following");
 
+    if (!user) {
+      return res.status(404).json({ errors: "User not found." });
+    }
+
     const followedUser = await User.findById(
       req.params.followed_user_id,
       "username"

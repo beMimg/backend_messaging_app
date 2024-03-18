@@ -15,9 +15,8 @@ router.put("/bio", isAuthenticated, userController.put_user_bio);
 
 // If is Authenticated and is the owner of the account, follow the :followed_user_id.
 router.post(
-  "/:user_id/follow/:followed_user_id",
+  "/follow/:followed_user_id",
   isAuthenticated,
-  isOwnerOfAccount,
   userController.post_follow
 );
 
