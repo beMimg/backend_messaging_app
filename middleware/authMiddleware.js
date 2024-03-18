@@ -1,6 +1,5 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const User = require("../models/user");
 
 exports.isAuthenticated = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -11,19 +10,4 @@ exports.isAuthenticated = async (req, res, next) => {
     req.user = user;
     next();
   });
-};
-
-exports.isOwnerOfAccount = async (req, res, next) => {
-  try {
-    if (req.user.user._id !== req.params.user_id) {
-      return res
-        .status(401)
-        .json({ error: "You are not the owner of this account." });
-    } else {
-      next();
-    }
-  } catch (err) {
-    console.error("Error in isOwnerOfAccount middleware:", err);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
 };
