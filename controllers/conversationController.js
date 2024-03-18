@@ -1,14 +1,14 @@
 const Conversation = require("../models/conversation");
 const User = require("../models/user");
 const Message = require("../models/message");
-
+const mongoose = require("mongoose");
 exports.post_conversation = async (req, res, next) => {
   try {
     // create an array with the two users _id
-    const participants = [req.user.user._id, req.body.participant];
+    const participants = [req.user.user._id, req.params.participant_id];
 
     const existsParticipant = await User.findById(
-      req.body.participant,
+      req.params.participant_id,
       "username"
     );
 
@@ -16,10 +16,13 @@ exports.post_conversation = async (req, res, next) => {
       return res.status(404).json({ errors: "Participant user not found." });
     }
 
+    // this other wise the returned input would be new ObjectId('6d123989dasdsnaihdbasuda')
+    // we need only the string
+    const participantId = existsParticipant._id.toString();
+
     // not allowing creation of a conversation that already exists between two users.
-    const participantsCondition = req.user.user._id && req.body.participant;
     const existsConversation = await Conversation.findOne({
-      participants: participantsCondition,
+      participants: { $all: [req.user.user._id, participantId] },
     });
 
     if (existsConversation) {
@@ -47,7 +50,7 @@ exports.post_conversation = async (req, res, next) => {
     const message = new Message({
       conversation_id: conversation._id,
       sender: req.user.user._id,
-      recipient: req.body.participant,
+      recipient: existsParticipant._id,
       content: req.body.content,
       timestamp: Date.now(),
     });

@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router({ mergeParams: true });
+const router = express.Router();
 const conversationController = require("../controllers/conversationController");
 const {
   isAuthenticated,
@@ -8,9 +8,8 @@ const {
 const messageRouter = require("./message");
 
 router.post(
-  "/",
+  "/:participant_id",
   isAuthenticated,
-  isOwnerOfAccount,
   conversationController.post_conversation
 );
 

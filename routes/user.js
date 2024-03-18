@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const { isAuthenticated } = require("../middleware/authMiddleware");
-const conversationRouter = require("./conversation");
 
 router.get("/", isAuthenticated, userController.get_users);
 
@@ -21,7 +20,5 @@ router.delete(
   isAuthenticated,
   userController.delete_follow
 );
-
-router.use("/:user_id/conversation", conversationRouter);
 
 module.exports = router;
