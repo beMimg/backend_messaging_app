@@ -17,13 +17,13 @@ router.post("/", async (req, res, next) => {
     const user = await User.findOne({ usernameLowerCase: usernameLowerCase });
 
     if (!user) {
-      return res.status(404).json({ error: "User not found." });
+      return res.status(404).json({ errors: "User not found." });
     }
 
     const match = await bcrypt.compare(req.body.password, user.password);
 
     if (!match) {
-      return res.status(404).json({ error: "Incorrect password." });
+      return res.status(404).json({ errors: "Incorrect password." });
     }
 
     jwt.sign({ user: user }, process.env.SECRET_KEY, (err, token) => {
