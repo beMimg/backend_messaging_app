@@ -1,6 +1,53 @@
 const Conversation = require("../models/conversation");
 const Message = require("../models/message");
 
+exports.get_messages = async (req, res, next) => {
+  try {
+    const conversation = await Conversation.findById(
+      req.params.conversation_id
+    );
+
+    if (!conversation) {
+      return res
+        .status(404)
+        .json({ errors: "This conversation doesn't exists." });
+    }
+
+    // verifies if the user is in this conversation
+    const isUserInConversation = conversation.participants.includes(
+      req.user.user._id
+    );
+
+    // return error if the user is not in the conversation
+    if (!isUserInConversation) {
+      return res
+        .status(401)
+        .json({ errors: "Your are not in this conversation" });
+    }
+
+    // finds all messages in the conversation id passed in req.params.conversation_id
+    // sorts by most recent
+    const allMessagesInConversation = await Message.find({
+      conversation_id: req.params.conversation_id,
+    }).sort({ timestamp: -1 });
+
+    // all messages in the conversation sent by the authenticated user
+    const sentMessages = allMessagesInConversation.filter(
+      (message) => message.sender.toString() === req.user.user._id
+    );
+    // all messages in the conversation sent by the other participant
+    const recievedMessages = allMessagesInConversation.filter(
+      (message) => message.sender.toString() !== req.user.user._id
+    );
+
+    return res
+      .status(200)
+      .json({ sentMessages: sentMessages, recievedMessages: recievedMessages });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 exports.post_message = async (req, res, next) => {
   try {
     // finds the conversation
