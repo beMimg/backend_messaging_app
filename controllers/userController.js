@@ -71,8 +71,14 @@ exports.post_user = [
       usernameLowerCase: usernameLowerCase,
     });
 
+    // Send the error bellow as an array with a property 'msg' to match the errors.array() passed in line 66.
+    // express-validator sends errors as an array, and the withMessage('Email not valid'),
+    // is in a property 'msg' inside that array.
+    // To be sure that errors are handled in the same way, send all errors equally
     if (existsUsernameLowerCase) {
-      return res.status(409).json({ message: "This user already exists." });
+      return res
+        .status(409)
+        .json({ errors: [{ msg: "This user already exists." }] });
     } else {
       await user.save();
       return res.status(200).json({
