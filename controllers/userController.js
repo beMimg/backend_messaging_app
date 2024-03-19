@@ -27,7 +27,7 @@ exports.post_user = [
     .trim()
     .isLength({ min: 1 })
     .escape()
-    .withMessage("First name is not valid."),
+    .withMessage("First name required"),
   body("password")
     .trim()
     .isLength({ min: 6 })
