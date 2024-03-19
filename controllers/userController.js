@@ -28,11 +28,6 @@ exports.post_user = [
     .isLength({ min: 1 })
     .escape()
     .withMessage("First name is not valid."),
-  body("last_name")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("Last name is not valid."),
   body("password")
     .trim()
     .isLength({ min: 6 })
@@ -64,7 +59,6 @@ exports.post_user = [
       usernameLowerCase: usernameLowerCase,
       email: req.body.email,
       first_name: req.body.first_name,
-      last_name: req.body.last_name,
       password: hashedPassword,
       creation: Date.now(),
     });
