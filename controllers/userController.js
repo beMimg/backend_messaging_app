@@ -78,7 +78,11 @@ exports.post_user = [
     if (existsUsernameLowerCase) {
       return res
         .status(409)
-        .json({ errors: [{ msg: "This user already exists." }] });
+        .json({
+          errors: [
+            { msg: "This username already exists, please choose another one" },
+          ],
+        });
     } else {
       await user.save();
       return res.status(200).json({
