@@ -76,13 +76,11 @@ exports.post_user = [
     // is in a property 'msg' inside that array.
     // To be sure that errors are handled in the same way, send all errors equally
     if (existsUsernameLowerCase) {
-      return res
-        .status(409)
-        .json({
-          errors: [
-            { msg: "This username already exists, please choose another one" },
-          ],
-        });
+      return res.status(409).json({
+        errors: [
+          { msg: "This username already exists, please choose another one." },
+        ],
+      });
     } else {
       await user.save();
       return res.status(200).json({
@@ -209,5 +207,18 @@ exports.delete_follow = async (req, res, next) => {
     });
   } catch (err) {
     return next(err);
+  }
+};
+
+exports.get_self = async (req, res, next) => {
+  try {
+    const user = await User.findById(
+      req.user.user._id,
+      "username email first_name bio following"
+    );
+
+    return res.status(200).json({ user: user });
+  } catch (err) {
+    return res.status(404).json({ errors: "User not found" });
   }
 };
