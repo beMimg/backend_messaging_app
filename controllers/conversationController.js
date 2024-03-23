@@ -66,11 +66,28 @@ exports.post_conversation = async (req, res, next) => {
 
 exports.get_conversations = async (req, res, next) => {
   try {
-    const conversations = await Conversation.find({
-      participants: { $all: [req.user.user._id] },
+    const user = await User.findById(req.user.user._id);
+
+    let conversations = await Conversation.find({
+      participants: { $all: [user._id] },
+    }).populate({ path: "participants", select: "username first_name" });
+
+    // Only need to send the information of the other participant.
+    // Filter through participants and send the information of the _id,
+    // that doesn't match the user._id.
+    const userIdString = user._id.toString();
+
+    const allUserConversations = conversations.map((conversation) => {
+      // Filter out the current user's participant object
+      const participantsExceptCurrentUser = conversation.participants.filter(
+        (participant) => participant._id.toString() !== userIdString
+      );
+
+      // remove the [], just return the object of the participant
+      return participantsExceptCurrentUser[0];
     });
 
-    return res.json({ conversations: conversations });
+    return res.json({ allUserConversations });
   } catch (err) {
     return next(err);
   }
