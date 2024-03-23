@@ -1,5 +1,6 @@
 const Conversation = require("../models/conversation");
 const Message = require("../models/message");
+const User = require("../models/user");
 
 exports.get_messages = async (req, res, next) => {
   try {
@@ -61,6 +62,7 @@ exports.post_message = async (req, res, next) => {
         .json({ errors: "This conversation doesn't exists." });
     }
 
+    console.log(conversation);
     // verifies if the user is in this conversation
     const isUserInConversation = conversation.participants.includes(
       req.user.user._id
@@ -84,7 +86,8 @@ exports.post_message = async (req, res, next) => {
     // we get the ID of the user that doesn't match the user that sends the menssage.
     // This way we get the ID of the participant
     const recipient = conversation.participants.filter(
-      (participant) => participant !== req.user.user._id
+      (participant) =>
+        participant._id.toString() !== req.user.user._id.toString()
     );
 
     const message = new Message({
