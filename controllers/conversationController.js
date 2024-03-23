@@ -99,7 +99,7 @@ exports.get_conversations = async (req, res, next) => {
           (participant) => participant._id.toString() !== userIdString
         );
 
-        return { particiant: participantsExceptCurrentUser[0], lastMessage };
+        return { participant: participantsExceptCurrentUser[0], lastMessage };
       })
     );
 
