@@ -216,7 +216,7 @@ exports.get_self = async (req, res, next) => {
   try {
     const user = await User.findById(
       req.user.user._id,
-      "username email first_name bio"
+      "username email first_name bio profile_pic_src"
     );
 
     return res.status(200).json({ user: user });
@@ -227,7 +227,10 @@ exports.get_self = async (req, res, next) => {
 
 exports.get_followings = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.user._id, "following").populate({
+    const user = await User.findById(
+      req.user.user._id,
+      "following profile_pic_src"
+    ).populate({
       path: "following",
       select: "username",
     });

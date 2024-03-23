@@ -70,7 +70,10 @@ exports.get_conversations = async (req, res, next) => {
 
     const conversations = await Conversation.find({
       participants: { $all: [user._id] },
-    }).populate({ path: "participants", select: "username first_name" });
+    }).populate({
+      path: "participants",
+      select: "username first_name profile_pic_src",
+    });
 
     // Only need to send the information of the other participant.
     // Filter through participants and send the information of the _id,
