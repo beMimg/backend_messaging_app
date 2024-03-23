@@ -14,7 +14,7 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   creation: { type: Date, required: true },
   bio: { type: String },
-  profile_pic: { data: Buffer, contentType: String },
+  profile_pic_src: { data: String },
   following: {
     type: Array,
     contentType: Schema.Types.ObjectId,
