@@ -7,7 +7,7 @@ const fs = require("fs").promises;
 
 exports.get_users = async (req, res, next) => {
   try {
-    const users = await User.find({}, "username");
+    const users = await User.find({}, "username profile_pic_src");
 
     if (users.length === 0) {
       return res.status(200).json({ message: "There are no users yet." });
@@ -248,14 +248,13 @@ exports.put_profile_pic = async (req, res, next) => {
       path.join(__dirname, "../images", req.file.filename)
     );
 
-    const userProfilePic = {
-      data: imgData,
-      contentType: req.file.mimetype,
-    };
+    const base64Img = Buffer.from(imgData).toString("base64");
+    const dataURI = `data:${req.file.mimetype};base64,${base64Img}`;
 
     const user = await User.findById(req.user.user._id);
 
-    await User.findByIdAndUpdate(user._id, { profile_pic: userProfilePic }, {});
+    await User.findByIdAndUpdate(user._id, { profile_pic_src: dataURI }, {});
+
     return res
       .status(200)
       .json({ message: "You've sucessfully changed your profile pic" });
