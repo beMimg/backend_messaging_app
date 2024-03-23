@@ -68,7 +68,7 @@ exports.get_conversations = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.user._id);
 
-    let conversations = await Conversation.find({
+    const conversations = await Conversation.find({
       participants: { $all: [user._id] },
     }).populate({ path: "participants", select: "username first_name" });
 
@@ -77,15 +77,28 @@ exports.get_conversations = async (req, res, next) => {
     // that doesn't match the user._id.
     const userIdString = user._id.toString();
 
-    const allUserConversations = conversations.map((conversation) => {
-      // Filter out the current user's participant object
-      const participantsExceptCurrentUser = conversation.participants.filter(
-        (participant) => participant._id.toString() !== userIdString
-      );
+    const allUserConversations = await Promise.all(
+      conversations.map(async (conversation) => {
+        // Get the last message of each conversation.
+        const getLastMessage = async () => {
+          const lastMessage = await Message.find(
+            {
+              conversation_id: conversation._id,
+            },
+            "sender content"
+          ).populate({ path: "sender", select: "username" });
+          return lastMessage[lastMessage.length - 1];
+        };
 
-      // remove the [], just return the object of the participant
-      return participantsExceptCurrentUser[0];
-    });
+        const lastMessage = await getLastMessage();
+        // Filter out the current user's participant object
+        const participantsExceptCurrentUser = conversation.participants.filter(
+          (participant) => participant._id.toString() !== userIdString
+        );
+
+        return { particiant: participantsExceptCurrentUser[0], lastMessage };
+      })
+    );
 
     return res.json({ allUserConversations });
   } catch (err) {
