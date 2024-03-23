@@ -2,6 +2,7 @@ const Conversation = require("../models/conversation");
 const User = require("../models/user");
 const Message = require("../models/message");
 const mongoose = require("mongoose");
+
 exports.post_conversation = async (req, res, next) => {
   try {
     // create an array with the two users _id
@@ -60,6 +61,18 @@ exports.post_conversation = async (req, res, next) => {
     return res.status(200).json({
       message: `You've created a conversation with ${existsParticipant.username}`,
     });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+exports.get_conversations = async (req, res, next) => {
+  try {
+    const conversations = await Conversation.find({
+      participants: { $all: [req.user.user._id] },
+    });
+
+    return res.json({ conversations: conversations });
   } catch (err) {
     return next(err);
   }

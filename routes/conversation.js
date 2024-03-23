@@ -10,6 +10,9 @@ router.post(
   conversationController.post_conversation
 );
 
+// gets all conversations of a user.
+router.get("/", isAuthenticated, conversationController.get_conversations);
+
 router.use("/:conversation_id/message", messageRouter);
 
 module.exports = router;
