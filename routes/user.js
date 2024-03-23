@@ -23,4 +23,5 @@ router.delete(
 
 router.get("/self", isAuthenticated, userController.get_self);
 
+router.get("/followings", isAuthenticated, userController.get_followings);
 module.exports = router;

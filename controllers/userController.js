@@ -214,11 +214,24 @@ exports.get_self = async (req, res, next) => {
   try {
     const user = await User.findById(
       req.user.user._id,
-      "username email first_name bio following"
+      "username email first_name bio"
     );
 
     return res.status(200).json({ user: user });
   } catch (err) {
     return res.status(404).json({ errors: "User not found" });
+  }
+};
+
+exports.get_followings = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.user._id, "following").populate({
+      path: "following",
+      select: "username",
+    });
+
+    return res.status(200).json({ userFollowings: user.following });
+  } catch (err) {
+    return res.status(404).json({ errors: "Internal Server error" });
   }
 };
