@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
+const path = require("path");
+const fs = require("fs").promises;
 
 exports.get_users = async (req, res, next) => {
   try {
@@ -233,5 +235,31 @@ exports.get_followings = async (req, res, next) => {
     return res.status(200).json({ userFollowings: user.following });
   } catch (err) {
     return res.status(404).json({ errors: "Internal Server error" });
+  }
+};
+
+exports.put_profile_pic = async (req, res, next) => {
+  try {
+    if (!req.file.filename) {
+      return res.status(500).json({ errors: "Need to be an image" });
+    }
+
+    const imgData = await fs.readFile(
+      path.join(__dirname, "../images", req.file.filename)
+    );
+
+    const userProfilePic = {
+      data: imgData,
+      contentType: req.file.mimetype,
+    };
+
+    const user = await User.findById(req.user.user._id);
+
+    await User.findByIdAndUpdate(user._id, { profile_pic: userProfilePic }, {});
+    return res
+      .status(200)
+      .json({ message: "You've sucessfully changed your profile pic" });
+  } catch (err) {
+    return next(err);
   }
 };
