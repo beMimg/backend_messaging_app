@@ -141,6 +141,7 @@ exports.get_conversation = async (req, res, next) => {
 
     return res.json({
       conversation_id: conversation._id,
+      conversation_creation: conversation.utc_creation,
       participant: participantExceptCurrentUser,
     });
   } catch (err) {
