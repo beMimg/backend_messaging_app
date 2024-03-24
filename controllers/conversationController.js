@@ -112,3 +112,38 @@ exports.get_conversations = async (req, res, next) => {
     return next(err);
   }
 };
+
+exports.get_conversation = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.user._id);
+
+    const conversation = await Conversation.findById(
+      req.params.conversation_id
+    ).populate({
+      path: "participants",
+      select: "username first_name profile_pic_src",
+    });
+
+    const participantExceptCurrentUser = conversation.participants.filter(
+      (participant) => participant._id.toString() !== user._id.toString()
+    );
+
+    const isUserInConversation = conversation.participants.some(
+      (participant) => participant._id.toString() === user._id.toString()
+    );
+
+    console.log(isUserInConversation);
+    if (!isUserInConversation) {
+      return res
+        .status(401)
+        .json({ errors: "Your are not in this conversation" });
+    }
+
+    return res.json({
+      conversation_id: conversation._id,
+      participant: participantExceptCurrentUser,
+    });
+  } catch (err) {
+    return next(err);
+  }
+};

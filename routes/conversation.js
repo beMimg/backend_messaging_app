@@ -13,6 +13,12 @@ router.post(
 // gets all conversations of a user.
 router.get("/", isAuthenticated, conversationController.get_conversations);
 
+router.get(
+  "/:conversation_id",
+  isAuthenticated,
+  conversationController.get_conversation
+);
+
 router.use("/:conversation_id/message", messageRouter);
 
 module.exports = router;
