@@ -132,7 +132,6 @@ exports.get_conversation = async (req, res, next) => {
       (participant) => participant._id.toString() === user._id.toString()
     );
 
-    console.log(isUserInConversation);
     if (!isUserInConversation) {
       return res
         .status(401)
