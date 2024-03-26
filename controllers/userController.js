@@ -18,6 +18,21 @@ exports.get_users = async (req, res, next) => {
   }
 };
 
+exports.get_user = async (req, res, next) => {
+  try {
+    const user = await User.findById(
+      req.params.user_id,
+      "username profile_pic_src bio following first_name bio utc_creation"
+    );
+    if (!user) {
+      return res.status(404).json({ errors: "User not found." });
+    }
+    return res.status(200).json({ user: user });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 exports.post_user = [
   body("username")
     .trim()
@@ -257,7 +272,7 @@ exports.put_profile_pic = async (req, res, next) => {
 
     return res
       .status(200)
-      .json({ message: "You've sucessfully changed your profile pic" });
+      .json({ message: "You've sucessfully changed your profile pic..." });
   } catch (err) {
     return next(err);
   }

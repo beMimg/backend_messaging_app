@@ -33,4 +33,6 @@ router.put(
   userController.put_profile_pic
 );
 
+router.get("/:user_id", isAuthenticated, userController.get_user);
+
 module.exports = router;
