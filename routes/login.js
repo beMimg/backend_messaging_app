@@ -14,7 +14,14 @@ router.post("/", async (req, res, next) => {
     // and validation processes to enforce case-insensitive uniqueness.
     const usernameLowerCase = await req.body.username.toLowerCase();
 
-    const user = await User.findOne({ usernameLowerCase: usernameLowerCase });
+    // only need password of the user the authenticate,
+    // have all the properties of User Schema will enlarge the token.
+    // specially if you have a binary base64 encode profile picture
+
+    const user = await User.findOne(
+      { usernameLowerCase: usernameLowerCase },
+      "password"
+    );
 
     if (!user) {
       return res.status(404).json({ errors: "User not found." });
