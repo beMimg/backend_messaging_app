@@ -24,6 +24,7 @@ router.delete(
 
 router.get("/self", isAuthenticated, userController.get_self);
 
+// all followers
 router.get("/followings", isAuthenticated, userController.get_followings);
 
 router.put(

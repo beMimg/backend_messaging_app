@@ -22,7 +22,7 @@ exports.get_user = async (req, res, next) => {
   try {
     const user = await User.findById(
       req.params.user_id,
-      "username profile_pic_src bio following first_name bio utc_creation"
+      "username profile_pic_src bio following first_name bio creation utc_creation"
     );
     if (!user) {
       return res.status(404).json({ errors: "User not found." });
@@ -231,7 +231,7 @@ exports.get_self = async (req, res, next) => {
   try {
     const user = await User.findById(
       req.user.user._id,
-      "username email first_name bio profile_pic_src"
+      "username email first_name bio profile_pic_src following"
     );
 
     return res.status(200).json({ user: user });
