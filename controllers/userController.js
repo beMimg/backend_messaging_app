@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const path = require("path");
 const fs = require("fs").promises;
+const Conversation = require("../models/conversation");
 
 exports.get_users = async (req, res, next) => {
   try {
@@ -20,12 +21,27 @@ exports.get_users = async (req, res, next) => {
 
 exports.get_user = async (req, res, next) => {
   try {
+    const loggedUser = await User.findById(req.user.user._id);
+
     const user = await User.findById(
       req.params.user_id,
       "username profile_pic_src bio following first_name bio creation utc_creation"
     );
+
+    const existsConversation = await Conversation.findOne({
+      participants: {
+        $all: [user._id, loggedUser._id],
+      },
+    });
+
     if (!user) {
       return res.status(404).json({ errors: "User not found." });
+    }
+    if (existsConversation) {
+      console.log("hi");
+      return res
+        .status(200)
+        .json({ user: user, existsConversation: existsConversation._id });
     }
     return res.status(200).json({ user: user });
   } catch (err) {
