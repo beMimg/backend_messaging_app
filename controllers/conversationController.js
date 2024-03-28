@@ -70,13 +70,17 @@ exports.get_conversations = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.user._id);
 
-    const conversations = await Conversation.find({
-      participants: { $all: [user._id] },
-    }).populate({
-      path: "participants",
-      select: "username first_name profile_pic_src",
-    });
-
+    const conversations = await Conversation.find(
+      {
+        participants: { $all: [user._id] },
+      },
+      "update"
+    )
+      .populate({
+        path: "participants",
+        select: "username first_name profile_pic_src",
+      })
+      .sort({ update: -1 });
     // Only need to send the information of the other participant.
     // Filter through participants and send the information of the _id,
     // that doesn't match the user._id.
