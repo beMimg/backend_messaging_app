@@ -7,7 +7,7 @@ exports.get_messages = async (req, res, next) => {
     const conversation = await Conversation.findById(
       req.params.conversation_id
     );
-
+    const user = await User.findById(req.user.user._id);
     if (!conversation) {
       return res
         .status(404)
@@ -26,8 +26,22 @@ exports.get_messages = async (req, res, next) => {
         .json({ errors: "Your are not in this conversation" });
     }
 
-    // finds all messages in the conversation id passed in req.params.conversation_id
-    // sorts by most recent
+    // Finds unread message where the recpient req.user.user._id (logged in user),
+    // Meaning its finding messages that wasn't read until this route .
+    // If you enter this route, you see all messages, so all the messages are read.
+    const unreadMessages = await Message.find({
+      isRead: false,
+      recipient: user._id,
+    });
+
+    // We map through all the unread messages with the recipient being the logged in user.
+    // Find each one by mapping and it's "_id" and set isRead to true.
+    const updatePromises = unreadMessages.map((message) => {
+      return Message.findByIdAndUpdate(message._id, { isRead: true });
+    });
+
+    await Promise.all(updatePromises);
+
     const allMessagesInConversation = await Message.find({
       conversation_id: req.params.conversation_id,
     }).sort({ timestamp: 1 });

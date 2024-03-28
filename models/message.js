@@ -11,6 +11,7 @@ const MessageSchema = new Schema({
   recipient: { type: Schema.Types.ObjectId, ref: "User", required: true },
   content: { type: String, required: true },
   timestamp: { type: Date, required: true },
+  isRead: { type: Boolean, default: false },
 });
 
 MessageSchema.virtual("utc_timestamp").get(function () {
