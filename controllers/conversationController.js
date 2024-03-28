@@ -94,7 +94,7 @@ exports.get_conversations = async (req, res, next) => {
             {
               conversation_id: conversation._id,
             },
-            "sender content timestamp"
+            "sender content timestamp isRead"
           ).populate({ path: "sender", select: "username" });
           return lastMessage[lastMessage.length - 1];
         };
