@@ -87,6 +87,13 @@ exports.post_message = async (req, res, next) => {
     });
 
     await message.save();
+    await Conversation.findByIdAndUpdate(
+      conversation._id,
+      {
+        update: message.timestamp,
+      },
+      {}
+    );
     return res
       .status(200)
       .json({ message: `You have sucessfully send a message to ${recipient}` });
