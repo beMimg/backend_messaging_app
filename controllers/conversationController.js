@@ -41,6 +41,7 @@ exports.post_conversation = async (req, res, next) => {
     const conversation = new Conversation({
       participants: participants,
       creation: Date.now(),
+      update: Date.now(),
     });
 
     await conversation.save();
