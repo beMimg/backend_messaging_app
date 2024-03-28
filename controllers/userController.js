@@ -38,7 +38,6 @@ exports.get_user = async (req, res, next) => {
       return res.status(404).json({ errors: "User not found." });
     }
     if (existsConversation) {
-      console.log("hi");
       return res
         .status(200)
         .json({ user: user, existsConversation: existsConversation._id });

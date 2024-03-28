@@ -58,6 +58,7 @@ exports.post_conversation = async (req, res, next) => {
 
     return res.status(200).json({
       message: `You've created a conversation with ${participant._id}`,
+      conversation_id: conversation._id,
     });
   } catch (err) {
     return next(err);
