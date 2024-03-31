@@ -8,10 +8,18 @@ const Conversation = require("../models/conversation");
 
 exports.get_users = async (req, res, next) => {
   try {
-    const users = await User.find({}, "username profile_pic_src");
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = 10;
+
+    const skip = (page - 1) * pageSize;
+
+    const users = await User.find({}, "username first_name profile_pic_src")
+      .sort({ first_name: 1 })
+      .skip(skip)
+      .limit(pageSize);
 
     if (users.length === 0) {
-      return res.status(200).json({ message: "There are no users yet." });
+      return res.status(404).json({ message: "There are no users yet." });
     }
     return res.status(200).json({ users: users });
   } catch (err) {

@@ -7,6 +7,7 @@ exports.get_messages = async (req, res, next) => {
     const conversation = await Conversation.findById(
       req.params.conversation_id
     );
+
     const user = await User.findById(req.user.user._id);
     if (!conversation) {
       return res
@@ -30,6 +31,7 @@ exports.get_messages = async (req, res, next) => {
     // Meaning its finding messages that wasn't read until this route .
     // If you enter this route, you see all messages, so all the messages are read.
     const unreadMessages = await Message.find({
+      conversation_id: conversation._id,
       isRead: false,
       recipient: user._id,
     });
