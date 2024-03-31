@@ -12,11 +12,20 @@ exports.get_users = async (req, res, next) => {
     const pageSize = 10;
 
     const skip = (page - 1) * pageSize;
-
-    const users = await User.find({}, "username first_name profile_pic_src")
+    // $ne operator means Not Equal
+    // Find all users that dont match the req.user.user._id
+    const users = await User.find(
+      { _id: { $ne: req.user.user._id } },
+      "username first_name profile_pic_src"
+    )
       .sort({ first_name: 1 })
       .skip(skip)
       .limit(pageSize);
+
+    // const users = await User.find({}, "username first_name profile_pic_src")
+    //   .sort({ first_name: 1 })
+    //   .skip(skip)
+    //   .limit(pageSize);
 
     if (users.length === 0) {
       return res.status(404).json({ message: "There are no users yet." });
@@ -255,7 +264,10 @@ exports.get_self = async (req, res, next) => {
     const user = await User.findById(
       req.user.user._id,
       "username email first_name bio profile_pic_src following"
-    );
+    ).populate({
+      path: "following",
+      select: "username profile_pic_src first_name",
+    });
 
     return res.status(200).json({ user: user });
   } catch (err) {
