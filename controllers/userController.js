@@ -22,11 +22,6 @@ exports.get_users = async (req, res, next) => {
       .skip(skip)
       .limit(pageSize);
 
-    // const users = await User.find({}, "username first_name profile_pic_src")
-    //   .sort({ first_name: 1 })
-    //   .skip(skip)
-    //   .limit(pageSize);
-
     if (users.length === 0) {
       return res.status(404).json({ message: "There are no users yet." });
     }
