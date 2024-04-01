@@ -63,15 +63,19 @@ exports.get_user = async (req, res, next) => {
 exports.post_user = [
   body("username")
     .trim()
-    .isLength({ min: 3 })
     .escape()
-    .withMessage("Username must have at least 3 characters."),
+    .isLength({ min: 3 })
+    .withMessage("Username must have at least 3 characters.")
+    .isLength({ max: 12 })
+    .withMessage("Username must have a maximum of 12 characters"),
   body("email").trim().isEmail().escape().withMessage("Email is not valid."),
   body("first_name")
     .trim()
-    .isLength({ min: 1 })
     .escape()
-    .withMessage("First name required"),
+    .isLength({ min: 1 })
+    .withMessage("First name required")
+    .isLength({ max: 12 })
+    .withMessage("Username must have a maximum of 12 characters"),
   body("password")
     .trim()
     .isLength({ min: 6 })
