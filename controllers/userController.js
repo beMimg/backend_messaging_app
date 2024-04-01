@@ -64,6 +64,8 @@ exports.post_user = [
   body("username")
     .trim()
     .escape()
+    .matches(/^\S+$/)
+    .withMessage("First name must be a single word without spaces")
     .isLength({ min: 3 })
     .withMessage("Username must have at least 3 characters.")
     .isLength({ max: 12 })
@@ -72,10 +74,12 @@ exports.post_user = [
   body("first_name")
     .trim()
     .escape()
+    .matches(/^\S+$/)
+    .withMessage("First name must be a single word without spaces")
     .isLength({ min: 1 })
     .withMessage("First name required")
     .isLength({ max: 12 })
-    .withMessage("Username must have a maximum of 12 characters"),
+    .withMessage("First name must have a maximum of 12 characters"),
   body("password")
     .trim()
     .isLength({ min: 6 })
