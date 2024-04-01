@@ -6,6 +6,8 @@ var logger = require("morgan");
 require("dotenv").config();
 const mongoose = require("mongoose");
 const cors = require("cors");
+const helmet = require("helmet");
+const compression = require("compression");
 // Routes
 var apiRouter = require("./routes/api");
 
@@ -32,6 +34,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(compression()); // Compress all routes
+app.use(helmet());
 
 app.use("/api", apiRouter);
 
