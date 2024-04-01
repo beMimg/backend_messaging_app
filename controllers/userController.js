@@ -65,7 +65,7 @@ exports.post_user = [
     .trim()
     .escape()
     .matches(/^\S+$/)
-    .withMessage("First name must be a single word without spaces")
+    .withMessage("Username must be a single word without spaces")
     .isLength({ min: 3 })
     .withMessage("Username must have at least 3 characters.")
     .isLength({ max: 12 })
