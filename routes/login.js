@@ -33,9 +33,14 @@ router.post("/", async (req, res, next) => {
       return res.status(404).json({ errors: "Incorrect password." });
     }
 
-    jwt.sign({ user: user }, process.env.SECRET_KEY, (err, token) => {
-      res.json({ token: token });
-    });
+    jwt.sign(
+      { user: user },
+      process.env.SECRET_KEY,
+      { expiresIn: "2d" },
+      (err, token) => {
+        res.json({ token: token });
+      }
+    );
   } catch (err) {
     return next(err);
   }
