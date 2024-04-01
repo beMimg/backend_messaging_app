@@ -289,6 +289,12 @@ exports.put_profile_pic = async (req, res, next) => {
       return res.status(500).json({ errors: "Need to be an image" });
     }
 
+    if (req.file.size > 1024 * 1024 * 2) {
+      return res
+        .status(400)
+        .json({ errors: "File size exceeds the limit of 2 MB" });
+    }
+
     const imgData = await fs.readFile(
       path.join(__dirname, "../images", req.file.filename)
     );

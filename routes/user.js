@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const { isAuthenticated } = require("../middleware/authMiddleware");
-const { upload } = require("../middleware/multer");
+const upload = require("../middleware/multer");
 
 router.get("/", isAuthenticated, userController.get_users);
 
