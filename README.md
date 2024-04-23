@@ -6,8 +6,9 @@ Open your web browser and go to [live preview](https://messagingbemimg.netlify.a
 **API's used**
 [Backend Messaging App repo](https://github.com/beMimg/backend_messaging_app)
 
-![messaging_app](https://github.com/beMimg/backend_messaging_app/assets/126000960/9579e763-a0f3-481b-8bdf-2fe435476e38)
 ![Screenshot 2024-04-23 173327](https://github.com/beMimg/backend_messaging_app/assets/126000960/0ee4a055-6ba5-45b2-87eb-2f7a5c02bc53)
+
+![messaging_app](https://github.com/beMimg/backend_messaging_app/assets/126000960/9579e763-a0f3-481b-8bdf-2fe435476e38)
 
 ## 1. Overview
 
