@@ -5,6 +5,7 @@ const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const { createGuest } = require("../utils/utils");
 
 router.post("/", async (req, res, next) => {
   try {
@@ -32,6 +33,46 @@ router.post("/", async (req, res, next) => {
     if (!match) {
       return res.status(404).json({ errors: "Incorrect password." });
     }
+
+    jwt.sign(
+      { user: user },
+      process.env.SECRET_KEY,
+      { expiresIn: "2d" },
+      (err, token) => {
+        res.json({ token: token });
+      }
+    );
+  } catch (err) {
+    return next(err);
+  }
+});
+
+router.post("/guest", async (req, res, next) => {
+  try {
+    const { first_name, username, usernameLowerCase, email, password } =
+      createGuest();
+
+    const existsUsernameLowerCase = await User.findOne({
+      usernameLowerCase: usernameLowerCase,
+    });
+
+    if (existsUsernameLowerCase) {
+      return res.status(409).json({
+        errors: [
+          { msg: "This username already exists, please choose another one." },
+        ],
+      });
+    }
+    const user = new User({
+      username: username,
+      usernameLowerCase: usernameLowerCase,
+      email: email,
+      first_name: first_name,
+      password: password,
+      creation: Date.now(),
+    });
+
+    await user.save();
 
     jwt.sign(
       { user: user },
